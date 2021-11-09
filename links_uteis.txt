@@ -1,0 +1,11 @@
+BIBLIOTECA INVESTPY - INVESTING.COM
+https://investpy.readthedocs.io/_info/usage.html
+https://www.youtube.com/watch?v=PfLqj1UWafc&ab_channel=C%C3%B3digoQuant-Finan%C3%A7asQuantitativas
+
+https://br.investing.com/equities/
+
+CRAWLER - BIBLIOTECA SCRAPY
+https://medium.com/@marlessonsantana/utilizando-o-scrapy-do-python-para-monitoramento-em-sites-de-not%C3%ADcias-web-crawler-ebdf7f1e4966
+https://github.com/marlesson/scrapy_tecnoblog
+https://www.infomoney.com.br/ultimas-noticias/
+https://www.infomoney.com.br/mercados/
