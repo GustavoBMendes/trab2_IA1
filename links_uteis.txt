@@ -9,3 +9,8 @@ https://medium.com/@marlessonsantana/utilizando-o-scrapy-do-python-para-monitora
 https://github.com/marlesson/scrapy_tecnoblog
 https://www.infomoney.com.br/ultimas-noticias/
 https://www.infomoney.com.br/mercados/
+
+
+--- EXECUTAR CRAWLER ---
+
+https://news.google.com/search?q='+ ticker + '&hl=pt-BR&gl=BR&ceid=BR%3Apt-419

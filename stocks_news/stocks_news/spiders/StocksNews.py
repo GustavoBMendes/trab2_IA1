@@ -18,7 +18,7 @@ class StocksnewsSpider(scrapy.Spider):
                                         from_date='01/01/2010',
                                         to_date='01/01/2020')
         print(df.head())
-        for new in response.css('article div div time::text'):
+        for new in response.css('article div div time::attr(datetime)'):
             title = new.get()
             stocks_list.date_news(title)
         
