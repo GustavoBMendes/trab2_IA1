@@ -12,5 +12,8 @@ https://www.infomoney.com.br/mercados/
 
 
 --- EXECUTAR CRAWLER ---
+scrapy runspider ./stocks_news/stocks_news/spiders/StocksNews.py --loglevel CRITICAL
+https://news.google.com/search?q=petr4&hl=pt-BR&gl=BR&ceid=BR%3Apt-419
 
-https://news.google.com/search?q='+ ticker + '&hl=pt-BR&gl=BR&ceid=BR%3Apt-419
+- a primeiro momento, considerar somente ações Br (tentar fazer genérico p qualquer ação do mundo).
+- fazer a análise para uma única empresa (como melhoria, fazer com várias empresas do mesmo setor).
