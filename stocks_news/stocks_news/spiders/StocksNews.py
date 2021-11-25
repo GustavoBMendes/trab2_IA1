@@ -1,7 +1,9 @@
 import scrapy
 import investpy as ipy
 import datetime
-import operator
+import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
 
 class StocksnewsSpider(scrapy.Spider):
     name = 'StocksNews'
@@ -19,19 +21,24 @@ class StocksnewsSpider(scrapy.Spider):
             title = new.css('h3 a::text').get()
             stocks_list.set_date_news(date, title)
         news = stocks_list.get_last_news()
-        stocks_list.get_stock_info(news)
         #fazer a análise da manchete e classificá - la
+        stocks_list.read_csv()
+        stocks_list.train_model()
+        stocks_list.get_stock_info(news)
 
 class Stocks:
     def __init__(self):
         self.news_list = []
         self.stock = ''
+        self.dataset_texts = []
+        self.dataset_classes = []
     
     def set_date_news(self, date, title):
         news_dict = {}
         date = datetime.datetime.strptime(date, '%Y-%m-%dT%H:%M:%SZ').strftime('%d/%m/%Y')
         news_dict['date'] = date
         news_dict['title'] = title
+        print(news_dict)
         self.news_list.append(news_dict)
         
     def set_stock(self, stock_name):
@@ -50,3 +57,26 @@ class Stocks:
                                         from_date=news['date'],
                                         to_date=to_date_str)
         print(df.head())
+    
+    def read_csv(self):
+        dataset = pd.read_csv('./Tweets_Mg.csv',encoding='utf-8')
+        self.dataset_texts = dataset["Text"].values
+        self.dataset_classes = dataset["Classificacao"].values
+    
+    def train_model(self):
+        vectorizer = CountVectorizer(analyzer = "word")
+        freq_tweets = vectorizer.fit_transform(self.dataset_texts)
+        
+        modelo = MultinomialNB()
+        modelo = modelo.fit(freq_tweets, self.dataset_classes)
+        
+        # Vamos usar algumas frases de teste para fazer a classificação com o modelo treinado
+        testes = ["Esse governo está no início, vamos ver o que vai dar",
+          "Estou muito feliz com o governo de São Paulo esse ano",
+          "O estado de Minas Gerais decretou calamidade financeira!!!",
+          "A segurança desse país está deixando a desejar",
+          "O governador de Minas é do PT",
+          "O prefeito de São Paulo está fazendo um ótimo trabalho"
+        ]
+        freq_testes = vectorizer.transform(testes)
+        print(modelo.predict(freq_testes))

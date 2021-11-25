@@ -11,6 +11,12 @@ https://www.infomoney.com.br/ultimas-noticias/
 https://www.infomoney.com.br/mercados/
 
 
+--- ANALISE DE SENTIMENTOS ---
+https://www.kaggle.com/leandrodoze/sentiment-analysis-in-portuguese
+https://www.kaggle.com/leandrodoze/tweets-from-mgbr
+https://github.com/pauloemmilio/dataset
+https://www.infoq.com/br/articles/sentiment-analysis-whats-with-the-tone/
+
 --- EXECUTAR CRAWLER ---
 scrapy runspider ./stocks_news/stocks_news/spiders/StocksNews.py --loglevel CRITICAL
 https://news.google.com/search?q=petr4&hl=pt-BR&gl=BR&ceid=BR%3Apt-419
