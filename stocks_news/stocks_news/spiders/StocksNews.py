@@ -35,11 +35,11 @@ class Stocks:
     
     def set_date_news(self, date, title):
         news_dict = {}
-        date = datetime.datetime.strptime(date, '%Y-%m-%dT%H:%M:%SZ').strftime('%d/%m/%Y')
-        news_dict['date'] = date
-        news_dict['title'] = title
-        print(news_dict)
-        self.news_list.append(news_dict)
+        if(title != None):
+            date = datetime.datetime.strptime(date, '%Y-%m-%dT%H:%M:%SZ').strftime('%d/%m/%Y')
+            news_dict['date'] = date
+            news_dict['title'] = title
+            self.news_list.append(news_dict)
         
     def set_stock(self, stock_name):
         self.stock = stock_name
@@ -50,12 +50,14 @@ class Stocks:
     def get_stock_info(self, news):
         #fazer o range de -2 dias até +2 dias
         date = datetime.datetime.strptime(news['date'], "%d/%m/%Y")
-        to_date = date + datetime.timedelta(days=2)
-        to_date_str = to_date.strftime('%d/%m/%Y')
+        start_date = date - datetime.timedelta(days=2)
+        start_date_str = start_date.strftime('%d/%m/%Y')
+        end_date = date + datetime.timedelta(days=2)
+        end_date_str = end_date.strftime('%d/%m/%Y')
         df = ipy.get_stock_historical_data(stock='PETR4',
                                         country='brazil',
-                                        from_date=news['date'],
-                                        to_date=to_date_str)
+                                        from_date=start_date_str,
+                                        to_date=end_date_str)
         print(df.head())
     
     def read_csv(self):
@@ -71,12 +73,15 @@ class Stocks:
         modelo = modelo.fit(freq_tweets, self.dataset_classes)
         
         # Vamos usar algumas frases de teste para fazer a classificação com o modelo treinado
-        testes = ["Esse governo está no início, vamos ver o que vai dar",
-          "Estou muito feliz com o governo de São Paulo esse ano",
-          "O estado de Minas Gerais decretou calamidade financeira!!!",
-          "A segurança desse país está deixando a desejar",
-          "O governador de Minas é do PT",
-          "O prefeito de São Paulo está fazendo um ótimo trabalho"
-        ]
-        freq_testes = vectorizer.transform(testes)
-        print(modelo.predict(freq_testes))
+        titles = []
+        for new in self.news_list:
+            titles.append(new['title'])
+            
+        freq_testes = vectorizer.transform(titles)
+        results = modelo.predict(freq_testes)
+        
+        for i in range(0, len(self.news_list)):
+            self.news_list[i]['classification'] = results[i]
+        # for new in self.news_list:
+        #     if new['classification'] == 'Negativo':
+        #         print(new)        
