@@ -20,6 +20,7 @@ class StocksnewsSpider(scrapy.Spider):
             date = new.css('div div time::attr(datetime)').get()
             title = new.css('h3 a::text').get()
             stocks_list.set_date_news(date, title)
+        stocks_list.sort_data()
         news = stocks_list.get_last_news()
         #fazer a análise da manchete e classificá - la
         stocks_list.read_csv()
@@ -37,9 +38,13 @@ class Stocks:
         news_dict = {}
         if(title != None):
             date = datetime.datetime.strptime(date, '%Y-%m-%dT%H:%M:%SZ').strftime('%d/%m/%Y')
+            date = datetime.datetime.strptime(date,'%d/%m/%Y')
             news_dict['date'] = date
             news_dict['title'] = title
             self.news_list.append(news_dict)
+            
+    def sort_data(self):
+        self.news_list = sorted(self.news_list, key=lambda d: d['date'], reverse=True)
         
     def set_stock(self, stock_name):
         self.stock = stock_name
@@ -48,8 +53,9 @@ class Stocks:
         return self.news_list[0]
     
     def get_stock_info(self, news):
-        #fazer o range de -2 dias até +2 dias
-        date = datetime.datetime.strptime(news['date'], "%d/%m/%Y")
+        #news = self.news_list
+        date_str = datetime.datetime.strftime(news['date'], '%d/%m/%Y')
+        date = datetime.datetime.strptime(date_str, "%d/%m/%Y")
         start_date = date - datetime.timedelta(days=2)
         start_date_str = start_date.strftime('%d/%m/%Y')
         end_date = date + datetime.timedelta(days=2)
@@ -58,7 +64,8 @@ class Stocks:
                                         country='brazil',
                                         from_date=start_date_str,
                                         to_date=end_date_str)
-        print(df.head())
+        #print(df.head())
+        print(df.corr())
     
     def read_csv(self):
         dataset = pd.read_csv('./Tweets_Mg.csv',encoding='utf-8')
@@ -82,6 +89,7 @@ class Stocks:
         
         for i in range(0, len(self.news_list)):
             self.news_list[i]['classification'] = results[i]
+        #print(self.news_list)
         # for new in self.news_list:
-        #     if new['classification'] == 'Negativo':
-        #         print(new)        
+        #     if new['classification'] == 'Negativo' or  new['classification'] == 'Positivo':
+        #         print(new)
